@@ -6,11 +6,19 @@ export interface Product {
   id: string;
   name: string;
   price: string;
+  originalPrice?: string;
   rating: number;
   image: string;
   category?: string;
+  collection?: string;
   description?: string;
   images?: string[];
+  sku?: string;
+  stock?: number;
+  finishes?: { name: string; color: string }[];
+  details?: string;
+  specifications?: string;
+  shippingReturns?: string;
 }
 
 const ProductCard = ({ id, name, price, rating, image }: Product) => {

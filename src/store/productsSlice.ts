@@ -6,11 +6,19 @@ interface Product {
   id: string;
   name: string;
   price: string;
+  originalPrice?: string;
   rating: number;
   image: string;
   category: string;
+  collection?: string;
   description?: string;
   images?: string[];
+  sku?: string;
+  stock?: number;
+  finishes?: { name: string; color: string }[];
+  details?: string;
+  specifications?: string;
+  shippingReturns?: string;
 }
 
 interface ProductsState {
@@ -26,10 +34,27 @@ const initialState: ProductsState = {
       id: "1",
       name: "Marble Desk Set",
       price: "$45.00",
+      originalPrice: "$60.00",
       rating: 4.8,
       image:
         "https://lh3.googleusercontent.com/aida-public/AB6AXuAwHEmZnb8wldUWF_qDiiGR7ktwybiTHKcFbJtrbhHQZcJglo7g9pVrtBTo9z6_qmsljIeUmSAM5AP7dY4SBx0yLNt-Aq7Yv2V4qw6oGmz63kuXjBljKo57x-aqp5Xu0RGZCTIAV4yarqOTC92Aboze-GRH5oG_doowhyDYouaRyFpi7QNtwKdmkMw-5Si6THb8gYRUtgqZzVS8TQ7FNIRdyrlLR0hSju27AC-J8GXAD8hPilJQHiWi5ow1q62qF_RUwnsFX0zuZuM",
       category: "Desk Accessories",
+      collection: "STATIONERY COLLECTION",
+      sku: "CE-BR-001",
+      stock: 4,
+      description:
+        "A timeless piece to elevate your workspace. Hand-polished brass sphere mounted on a solid marble base, designed to inspire creativity and focus.",
+      finishes: [
+        { name: "Polished Gold", color: "#D4AF37" },
+        { name: "Silver", color: "#C0C0C0" },
+        { name: "Black", color: "#000000" },
+      ],
+      details:
+        "Crafted from solid brass with a mirror-polished finish, this ornament sits atop a genuine Carrara marble base. It serves as both a paperweight and a striking visual anchor for your desk.",
+      specifications:
+        'Material: Solid Brass, Marble Base | Dimensions: 3" x 3" x 2" | Weight: 0.5 lbs | Finish: Mirror Polished',
+      shippingReturns:
+        "Free shipping on orders over $50. Standard shipping takes 3-5 business days. Returns accepted within 30 days of purchase. Items must be in original condition.",
     },
     {
       id: "2",

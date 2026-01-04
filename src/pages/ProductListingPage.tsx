@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import ProductCard, { Product } from '../components/ProductCard';
+import ProductCard from '../components/ProductCard';
+import type { Product } from '../components/ProductCard';
 import CategoryBanner from '../components/CategoryBanner';
 import FiltersSidebar from '../components/FiltersSidebar';
 import Pagination from '../components/Pagination';

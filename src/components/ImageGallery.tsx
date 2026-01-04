@@ -1,4 +1,4 @@
-import { Product } from './ProductCard';
+import type { Product } from './ProductCard';
 
 interface ImageGalleryProps {
   product: Product;

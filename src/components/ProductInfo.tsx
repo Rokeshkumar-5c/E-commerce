@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../store/cartSlice';
-import { Product } from './ProductCard';
+import type { Product } from './ProductCard';
 
 interface ProductInfoProps {
   product: Product;
@@ -52,7 +52,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       </p>
       {/* Actions */}
       <div className="flex flex-col gap-3">
-        <button onClick={handleAddToCart} className="w-full h-12 bg-primary hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center gap-2">
+        <button onClick={handleAddToCart} className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2">
           <span className="material-symbols-outlined">shopping_bag</span>
           Add to Cart - {product.price}
         </button>

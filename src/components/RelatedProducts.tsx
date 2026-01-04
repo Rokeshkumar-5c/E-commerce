@@ -1,11 +1,12 @@
 import { useSelector } from 'react-redux';
-import ProductCard, { Product } from './ProductCard';
+import ProductCard from './ProductCard';
+import type { Product } from './ProductCard';
 import { selectAllProducts } from '../store/productsSlice';
 
 const RelatedProducts = () => {
     const allProducts = useSelector(selectAllProducts);
-    // Get 4 random products
-    const products = allProducts.sort(() => 0.5 - Math.random()).slice(0, 4);
+    // Get 4 random products (create a copy first since Redux state is immutable)
+    const products = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 4);
 
     return (
         <div className="py-12 border-t border-gray-200 dark:border-gray-700">

@@ -1,4 +1,5 @@
-import ProductCard, { Product } from './ProductCard';
+import ProductCard from './ProductCard';
+import type { Product } from './ProductCard';
 import { useSelector } from 'react-redux';
 import { selectAllProducts } from '../store/productsSlice';
 

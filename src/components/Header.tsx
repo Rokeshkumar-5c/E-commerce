@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectCartItems } from '../store/cartSlice';
 
 const Header = () => {
+  const cartItems = useSelector(selectCartItems);
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
   return (
     <header className="bg-white dark:bg-[#1a202c] border-b border-[#f0f2f4] dark:border-gray-800 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,8 +21,8 @@ const Header = () => {
             </Link>
             <nav className="hidden md:flex items-center gap-6">
               <Link className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" to="/">Home</Link>
-              <Link className="text-sm font-medium text-primary hover:text-primary transition-colors" to="/category/gifts">Gifts</Link>
-              <Link className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" to="/category/stationery">Stationery</Link>
+              <Link className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" to="/category/decorative-statues">Decorative Statues</Link>
+              <Link className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" to="/category/desk-accessories">Desk Accessories</Link>
               <Link className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" to="/category/electronics">Electronics</Link>
               <Link className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" to="/category/decor">Decor</Link>
             </nav>
@@ -32,8 +37,13 @@ const Header = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+              <button className="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                 <span className="material-symbols-outlined">shopping_cart</span>
+                {cartCount > 0 && (
+                  <span className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary rounded-full">
+                    {cartCount}
+                  </span>
+                )}
               </button>
               <button className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                 <span className="material-symbols-outlined">account_circle</span>

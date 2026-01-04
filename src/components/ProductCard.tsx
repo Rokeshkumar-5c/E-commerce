@@ -1,3 +1,7 @@
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { addToCart } from '../store/cartSlice';
+
 export interface Product {
   id: string;
   name: string;
@@ -9,17 +13,34 @@ export interface Product {
   images?: string[];
 }
 
-const ProductCard = ({ name, price, rating, image }: Product) => {
+const ProductCard = ({ id, name, price, rating, image }: Product) => {
+  const dispatch = useDispatch();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(addToCart({ id, name, price, image }));
+  };
+
   return (
-    <div className="group flex flex-col bg-white dark:bg-[#1a2230] rounded-xl border border-[#dbdfe6] dark:border-white/5 overflow-hidden hover:shadow-xl transition-all duration-300">
+    <Link to={`/product/${id}`} className="group flex flex-col bg-white dark:bg-[#1a2230] rounded-xl border border-[#dbdfe6] dark:border-white/5 overflow-hidden hover:shadow-xl transition-all duration-300">
       <div className="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
         <div className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" style={{backgroundImage: `url("${image}")`}}>
         </div>
-        <button className="absolute top-3 right-3 p-2 rounded-full bg-white/90 text-gray-500 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
+        <button 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          className="absolute top-3 right-3 p-2 rounded-full bg-white/90 text-gray-500 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+        >
           <span className="material-symbols-outlined text-[20px]">favorite</span>
         </button>
         <div className="absolute bottom-3 right-3">
-          <button className="flex items-center justify-center h-10 w-10 rounded-full bg-primary text-white shadow-lg translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-primary/90">
+          <button 
+            onClick={handleAddToCart}
+            className="flex items-center justify-center h-10 w-10 rounded-full bg-primary text-white shadow-lg translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-primary/90"
+          >
             <span className="material-symbols-outlined text-[20px]">add_shopping_cart</span>
           </button>
         </div>
@@ -34,7 +55,7 @@ const ProductCard = ({ name, price, rating, image }: Product) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

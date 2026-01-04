@@ -2,6 +2,7 @@ import Hero from '../components/Hero';
 import Features from '../components/Features';
 import ShopByOccasion from '../components/ShopByOccasion';
 import NewArrivals from '../components/NewArrivals';
+import JoinCelebration from '../components/JoinCelebration';
 
 const HomePage = () => {
   return (
@@ -11,6 +12,7 @@ const HomePage = () => {
         <Features />
         <ShopByOccasion />
         <NewArrivals />
+        <JoinCelebration />
       </div>
     </main>
   );

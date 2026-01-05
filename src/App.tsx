@@ -4,6 +4,9 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ProductListingPage from './pages/ProductListingPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import ShoppingCartPage from './pages/ShoppingCartPage';
+import UserAccountPage from './pages/UserAccountPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 const Layout = () => {
   return (
@@ -25,6 +28,9 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="category/:categoryName" element={<ProductListingPage />} />
           <Route path="product/:productId" element={<ProductDetailPage />} />
+          <Route path="cart" element={<ShoppingCartPage />} />
+          <Route path="account" element={<UserAccountPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
         </Route>
       </Routes>
     </Router>

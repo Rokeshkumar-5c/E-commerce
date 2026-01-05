@@ -37,17 +37,17 @@ const Header = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button className="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+              <Link to="/cart" className="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                 <span className="material-symbols-outlined">shopping_cart</span>
                 {cartCount > 0 && (
                   <span className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary rounded-full">
                     {cartCount}
                   </span>
                 )}
-              </button>
-              <button className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+              </Link>
+              <Link to="/account" className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                 <span className="material-symbols-outlined">account_circle</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>

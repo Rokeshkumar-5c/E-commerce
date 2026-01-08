@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../store/cartSlice";
@@ -6,6 +7,42 @@ import type { Product } from "./ProductCard";
 interface ProductInfoProps {
   product: Product;
 }
+
+const FinishSwatch = styled.button<{ $isSelected: boolean; $color: string }>`
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  border: 2px solid;
+  background-color: ${props => props.$color};
+  transition: all 0.2s;
+  border-color: ${props => 
+    props.$isSelected 
+      ? 'var(--color-primary)' 
+      : 'rgb(209 213 219)'};
+  
+  ${props => props.$isSelected && 'transform: scale(1.1);'}
+  
+  &:hover {
+    border-color: ${props => 
+      props.$isSelected 
+        ? 'var(--color-primary)' 
+        : 'rgb(156 163 175)'};
+  }
+  
+  .dark & {
+    border-color: ${props => 
+      props.$isSelected 
+        ? 'var(--color-primary)' 
+        : 'rgb(75 85 99)'};
+    
+    &:hover {
+      border-color: ${props => 
+        props.$isSelected 
+          ? 'var(--color-primary)' 
+          : 'rgb(107 114 128)'};
+    }
+  }
+`;
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const dispatch = useDispatch();
@@ -126,15 +163,11 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </label>
         <div className="flex gap-3">
           {finishes.map((finish, index) => (
-            <button
+            <FinishSwatch
               key={index}
               onClick={() => setSelectedFinish(index)}
-              className={`w-12 h-12 rounded-full border-2 transition-all ${
-                selectedFinish === index
-                  ? "border-primary scale-110"
-                  : "border-gray-300 dark:border-gray-600 hover:border-gray-400"
-              }`}
-              style={{ backgroundColor: finish.color }}
+              $isSelected={selectedFinish === index}
+              $color={finish.color}
               title={finish.name}
             />
           ))}

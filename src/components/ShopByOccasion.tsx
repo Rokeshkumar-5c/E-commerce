@@ -1,3 +1,18 @@
+import styled from 'styled-components';
+
+const OccasionImage = styled.div<{ $imageUrl: string }>`
+  width: 100%;
+  height: 100%;
+  background-image: url("${props => props.$imageUrl}");
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.7s;
+  
+  .group:hover & {
+    transform: scale(1.1);
+  }
+`;
+
 const occasions = [
   {
     name: 'Birthdays',
@@ -34,8 +49,7 @@ const ShopByOccasion = () => {
         {occasions.map((occasion) => (
           <a key={occasion.name} className="group relative aspect-[4/5] rounded-xl overflow-hidden cursor-pointer" href="#">
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-            <div className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{backgroundImage: `url("${occasion.image}")`}}>
-            </div>
+            <OccasionImage $imageUrl={occasion.image} />
             <div className="absolute bottom-0 left-0 p-5 z-20">
               <p className="text-white text-lg md:text-xl font-bold">{occasion.name}</p>
               <p className="text-white/80 text-sm mt-1 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">{occasion.cta}</p>

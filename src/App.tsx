@@ -7,6 +7,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import ShoppingCartPage from './pages/ShoppingCartPage';
 import UserAccountPage from './pages/UserAccountPage';
 import CheckoutPage from './pages/CheckoutPage';
+import OrderConfirmationPage from './pages/OrderConfirmationPage';
 
 const Layout = () => {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="cart" element={<ShoppingCartPage />} />
           <Route path="account" element={<UserAccountPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="order-confirmation" element={<OrderConfirmationPage />} />
         </Route>
       </Routes>
     </Router>

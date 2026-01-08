@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { addToCart } from '../store/cartSlice';
@@ -21,6 +22,19 @@ export interface Product {
   shippingReturns?: string;
 }
 
+const ProductImage = styled.div<{ $imageUrl: string }>`
+  width: 100%;
+  height: 100%;
+  background-image: url("${props => props.$imageUrl}");
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s;
+  
+  .group:hover & {
+    transform: scale(1.05);
+  }
+`;
+
 const ProductCard = ({ id, name, price, rating, image }: Product) => {
   const dispatch = useDispatch();
 
@@ -33,8 +47,7 @@ const ProductCard = ({ id, name, price, rating, image }: Product) => {
   return (
     <Link to={`/product/${id}`} className="group flex flex-col bg-white dark:bg-[#1a2230] rounded-xl border border-[#dbdfe6] dark:border-white/5 overflow-hidden hover:shadow-xl transition-all duration-300">
       <div className="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
-        <div className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" style={{backgroundImage: `url("${image}")`}}>
-        </div>
+        <ProductImage $imageUrl={image} />
         <button 
           onClick={(e) => {
             e.preventDefault();

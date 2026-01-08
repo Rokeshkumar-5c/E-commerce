@@ -1,3 +1,19 @@
+import styled from 'styled-components';
+
+const HeroImage = styled.div`
+  width: 100%;
+  height: 100%;
+  background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBsnNbLy4biG-oTpKF1wm7zDk4jzZB7pFTWOp0ViuyIQ_-bhQUT9xI78MLn6V4nLHmLvb_43a80dxRyp_uHIiiMGCRcKKbo9uglJS6-ISnDSs2LBeihpUr43_sTbdDpdu65CKt-FLlKWbPw7Ky-tfbBxcx0phJdaQN4dMfQQd1X4nsws-ZFVCIFua9lmd_7olBPXuTRDQ0YY2vbkrDG2BOabhQvmITGORWtrZHvkghU3xVNaK8X-OMdqWIdh3d0jTn6Rv17FYETaw0");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 0.7s;
+  
+  .group:hover & {
+    transform: scale(1.05);
+  }
+`;
+
 const Hero = () => {
   return (
     <section className="@container">
@@ -23,8 +39,7 @@ const Hero = () => {
         </div>
         <div className="w-full @[864px]:w-1/2 aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl relative group">
           <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500"></div>
-          <div className="w-full h-full bg-center bg-no-repeat bg-cover transition-transform duration-700 group-hover:scale-105" style={{backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBsnNbLy4biG-oTpKF1wm7zDk4jzZB7pFTWOp0ViuyIQ_-bhQUT9xI78MLn6V4nLHmLvb_43a80dxRyp_uHIiiMGCRcKKbo9uglJS6-ISnDSs2LBeihpUr43_sTbdDpdu65CKt-FLlKWbPw7Ky-tfbBxcx0phJdaQN4dMfQQd1X4nsws-ZFVCIFua9lmd_7olBPXuTRDQ0YY2vbkrDG2BOabhQvmITGORWtrZHvkghU3xVNaK8X-OMdqWIdh3d0jTn6Rv17FYETaw0")'}}>
-          </div>
+          <HeroImage />
         </div>
       </div>
     </section>

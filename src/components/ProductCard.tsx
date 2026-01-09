@@ -1,7 +1,9 @@
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { addToCart } from '../store/cartSlice';
+import { addToCartAsync, selectIsAddingToCart } from '../store/cartSlice';
+import { LoadingSpinner } from '../shared/components/Loading';
+import { useAppDispatch } from '../shared/hooks/useAppDispatch';
 
 export interface Product {
   id: string;
@@ -28,7 +30,7 @@ const ProductImage = styled.div<{ $imageUrl: string }>`
   background-image: url("${props => props.$imageUrl}");
   background-size: cover;
   background-position: center;
-  transition: transform 0.5s;
+  transition: transform 0.5s ease;
   
   .group:hover & {
     transform: scale(1.05);
@@ -36,12 +38,13 @@ const ProductImage = styled.div<{ $imageUrl: string }>`
 `;
 
 const ProductCard = ({ id, name, price, rating, image }: Product) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const isAddingToCart = useSelector(selectIsAddingToCart);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(addToCart({ id, name, price, image }));
+    dispatch(addToCartAsync({ id, name, price, image }));
   };
 
   return (
@@ -60,9 +63,15 @@ const ProductCard = ({ id, name, price, rating, image }: Product) => {
         <div className="absolute bottom-3 right-3">
           <button 
             onClick={handleAddToCart}
-            className="flex items-center justify-center h-10 w-10 rounded-full bg-primary text-white shadow-lg translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-primary/90"
+            disabled={isAddingToCart}
+            className="flex items-center justify-center h-10 w-10 rounded-full bg-primary text-white shadow-lg translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Add to cart"
           >
-            <span className="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+            {isAddingToCart ? (
+              <LoadingSpinner size="sm" className="border-white border-t-transparent" />
+            ) : (
+              <span className="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+            )}
           </button>
         </div>
       </div>

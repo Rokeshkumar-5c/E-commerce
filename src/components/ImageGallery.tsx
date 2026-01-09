@@ -11,7 +11,7 @@ const MainImageContainer = styled.div<{ $imageUrl: string }>`
   background-image: url("${props => props.$imageUrl}");
   background-size: cover;
   background-position: center;
-  transition: transform 0.5s;
+  transition: transform 0.5s ease;
   cursor: zoom-in;
   
   &:hover {

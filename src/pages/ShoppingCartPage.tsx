@@ -1,15 +1,17 @@
 import styled from 'styled-components';
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   selectCartItems,
   selectCartTotal,
-  removeFromCart,
-  updateQuantity,
-  addToCart,
+  removeFromCartAsync,
+  updateQuantityAsync,
+  addToCartAsync,
+  selectIsUpdatingQuantity,
 } from "../store/cartSlice";
-import type { RootState } from "../store/store";
+import { LoadingSpinner } from "../shared/components/Loading";
+import { useAppDispatch } from "../shared/hooks/useAppDispatch";
 
 const ProgressBar = styled.div<{ $width: number }>`
   height: 100%;
@@ -20,18 +22,19 @@ const ProgressBar = styled.div<{ $width: number }>`
 `;
 
 const CartItemImage = styled.div<{ $imageUrl: string }>`
+  background-image: url("${props => props.$imageUrl}");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url("${props => props.$imageUrl}");
 `;
 
 const RecommendationImage = styled.div<{ $imageUrl: string }>`
   width: 100%;
   height: 100%;
+  background-image: url("${props => props.$imageUrl}");
   background-size: cover;
   background-position: center;
-  transition: transform 0.5s;
+  transition: transform 0.5s ease;
   
   .group:hover & {
     transform: scale(1.05);
@@ -39,9 +42,11 @@ const RecommendationImage = styled.div<{ $imageUrl: string }>`
 `;
 
 const ShoppingCartPage: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const cartItems = useSelector(selectCartItems);
   const subtotal = useSelector(selectCartTotal);
+  const isUpdatingQuantity = useSelector(selectIsUpdatingQuantity);
+  
   const tax = subtotal * 0.08; // 8% tax
   const shipping = subtotal >= 50 ? 0 : 5.99;
   const total = subtotal + tax + shipping;
@@ -50,11 +55,11 @@ const ShoppingCartPage: React.FC = () => {
   const progressPercentage = Math.min(100, (subtotal / freeShippingThreshold) * 100);
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
-    dispatch(updateQuantity({ id, quantity: newQuantity }));
+    dispatch(updateQuantityAsync({ id, quantity: newQuantity }));
   };
 
   const handleRemove = (id: string) => {
-    dispatch(removeFromCart(id));
+    dispatch(removeFromCartAsync(id));
   };
 
   const handleAddRecommendation = (product: {
@@ -63,7 +68,7 @@ const ShoppingCartPage: React.FC = () => {
     price: string;
     image: string;
   }) => {
-    dispatch(addToCart(product));
+    dispatch(addToCartAsync(product));
   };
 
   // Recommendation products
@@ -228,17 +233,23 @@ const ShoppingCartPage: React.FC = () => {
                             onClick={() =>
                               handleQuantityChange(item.id, item.quantity - 1)
                             }
-                            className="size-7 flex items-center justify-center rounded bg-white dark:bg-card-dark text-text-main-light dark:text-text-main-dark shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            disabled={isUpdatingQuantity}
+                            className="size-7 flex items-center justify-center rounded bg-white dark:bg-card-dark text-text-main-light dark:text-text-main-dark shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            <span className="material-symbols-outlined text-[16px]">
-                              remove
-                            </span>
+                            {isUpdatingQuantity ? (
+                              <LoadingSpinner size="sm" />
+                            ) : (
+                              <span className="material-symbols-outlined text-[16px]">
+                                remove
+                              </span>
+                            )}
                           </button>
                           <input
-                            className="w-10 bg-transparent border-none text-center text-sm font-medium text-text-main-light dark:text-text-main-dark focus:ring-0 p-0"
+                            className="w-10 bg-transparent border-none text-center text-sm font-medium text-text-main-light dark:text-text-main-dark focus:ring-0 p-0 disabled:opacity-50"
                             min="1"
                             type="number"
                             value={item.quantity}
+                            disabled={isUpdatingQuantity}
                             onChange={(e) =>
                               handleQuantityChange(
                                 item.id,
@@ -251,11 +262,16 @@ const ShoppingCartPage: React.FC = () => {
                             onClick={() =>
                               handleQuantityChange(item.id, item.quantity + 1)
                             }
-                            className="size-7 flex items-center justify-center rounded bg-white dark:bg-card-dark text-text-main-light dark:text-text-main-dark shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            disabled={isUpdatingQuantity}
+                            className="size-7 flex items-center justify-center rounded bg-white dark:bg-card-dark text-text-main-light dark:text-text-main-dark shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            <span className="material-symbols-outlined text-[16px]">
-                              add
-                            </span>
+                            {isUpdatingQuantity ? (
+                              <LoadingSpinner size="sm" />
+                            ) : (
+                              <span className="material-symbols-outlined text-[16px]">
+                                add
+                              </span>
+                            )}
                           </button>
                         </div>
                       </div>

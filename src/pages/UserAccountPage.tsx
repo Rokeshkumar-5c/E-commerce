@@ -12,10 +12,10 @@ import {
 } from "../store/userSlice";
 
 const AvatarImage = styled.div<{ $imageUrl: string }>`
+  background-image: url("${props => props.$imageUrl}");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url("${props => props.$imageUrl}");
 `;
 
 const IconWithSize = styled.span<{ $size: string }>`
@@ -23,9 +23,9 @@ const IconWithSize = styled.span<{ $size: string }>`
 `;
 
 const OrderProductImage = styled.div<{ $imageUrl: string }>`
+  background-image: url("${props => props.$imageUrl}");
   background-size: cover;
   background-position: center;
-  background-image: url("${props => props.$imageUrl}");
 `;
 
 const UserAccountPage: React.FC = () => {

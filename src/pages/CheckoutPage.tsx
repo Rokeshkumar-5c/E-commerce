@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   selectCartItems,
   selectCartTotal,
-  clearCart,
+  clearCartAsync,
+  selectIsClearingCart,
 } from "../store/cartSlice";
 import type { RootState } from "../store/store";
+import { LoadingSpinner } from "../shared/components/Loading";
+import { useAppDispatch } from "../shared/hooks/useAppDispatch";
 
 interface PaymentFormData {
   cardNumber: string;
@@ -18,9 +21,10 @@ interface PaymentFormData {
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const cartItems = useSelector(selectCartItems);
   const subtotal = useSelector(selectCartTotal);
+  const isClearingCart = useSelector(selectIsClearingCart);
   const tax = subtotal * 0.08; // 8% tax
   const shipping = subtotal >= 50 ? 0 : 5.99;
   const total = subtotal + tax + shipping;
@@ -110,8 +114,9 @@ const CheckoutPage: React.FC = () => {
       });
       
       // Clear cart and redirect to confirmation
-      dispatch(clearCart());
-      navigate("/order-confirmation");
+      dispatch(clearCartAsync()).then(() => {
+        navigate("/order-confirmation");
+      });
     }
   };
 
@@ -223,13 +228,13 @@ const CheckoutPage: React.FC = () => {
 
               {/* Credit Card Form */}
               {paymentMethod === "card" && (
-                <div className="p-5 md:p-8 bg-[#f8fbfe] dark:bg-[#15232b]">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div className="col-span-1 md:col-span-2">
+              <div className="p-5 md:p-8 bg-[#f8fbfe] dark:bg-[#15232b]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="col-span-1 md:col-span-2">
                       <label className="block text-[#111618] dark:text-[#e0e0e0] text-sm font-semibold mb-2">
                         Card Number
                       </label>
-                      <div className="relative">
+                    <div className="relative">
                         <input
                           name="cardNumber"
                           value={formData.cardNumber}
@@ -249,7 +254,7 @@ const CheckoutPage: React.FC = () => {
                           type="text"
                           maxLength={19}
                         />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#617c89]">
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#617c89]">
                           <span className="material-symbols-outlined">
                             credit_card
                           </span>
@@ -262,8 +267,8 @@ const CheckoutPage: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Expiry Date */}
-                    <div className="col-span-1">
+                  {/* Expiry Date */}
+                  <div className="col-span-1">
                       <label className="block text-[#111618] dark:text-[#e0e0e0] text-sm font-semibold mb-2">
                         Expiry Date
                       </label>
@@ -291,20 +296,20 @@ const CheckoutPage: React.FC = () => {
                           {errors.expiryDate}
                         </p>
                       )}
-                    </div>
+                  </div>
 
-                    {/* CVV */}
-                    <div className="col-span-1">
-                      <label className="block text-[#111618] dark:text-[#e0e0e0] text-sm font-semibold mb-2 flex items-center gap-1">
-                        CVV / CVC
+                  {/* CVV */}
+                  <div className="col-span-1">
+                    <label className="block text-[#111618] dark:text-[#e0e0e0] text-sm font-semibold mb-2 flex items-center gap-1">
+                      CVV / CVC
                         <span
                           className="material-symbols-outlined text-[16px] text-[#617c89] cursor-help"
                           title="3-digit security code on the back of your card"
                         >
                           help
                         </span>
-                      </label>
-                      <div className="relative">
+                    </label>
+                    <div className="relative">
                         <input
                           name="cvv"
                           value={formData.cvv}
@@ -318,8 +323,8 @@ const CheckoutPage: React.FC = () => {
                           type="text"
                           maxLength={4}
                         />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#617c89]">
-                          <span className="material-symbols-outlined">lock</span>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#617c89]">
+                        <span className="material-symbols-outlined">lock</span>
                         </div>
                       </div>
                       {errors.cvv && (
@@ -327,8 +332,8 @@ const CheckoutPage: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Cardholder Name */}
-                    <div className="col-span-1 md:col-span-2">
+                  {/* Cardholder Name */}
+                  <div className="col-span-1 md:col-span-2">
                       <label className="block text-[#111618] dark:text-[#e0e0e0] text-sm font-semibold mb-2">
                         Cardholder Name
                       </label>
@@ -349,11 +354,11 @@ const CheckoutPage: React.FC = () => {
                           {errors.cardholderName}
                         </p>
                       )}
-                    </div>
+                  </div>
 
-                    {/* Save Card Checkbox */}
-                    <div className="col-span-1 md:col-span-2 mt-2">
-                      <label className="flex items-center gap-3 cursor-pointer group">
+                  {/* Save Card Checkbox */}
+                  <div className="col-span-1 md:col-span-2 mt-2">
+                    <label className="flex items-center gap-3 cursor-pointer group">
                         <input
                           name="saveCard"
                           checked={formData.saveCard}
@@ -364,7 +369,7 @@ const CheckoutPage: React.FC = () => {
                         <span className="text-sm text-[#111618] dark:text-[#e0e0e0] group-hover:text-primary transition-colors">
                           Save this card for future secure purchases
                         </span>
-                      </label>
+                    </label>
                     </div>
                   </div>
                 </div>
@@ -492,14 +497,14 @@ const CheckoutPage: React.FC = () => {
                   const itemTotal = itemPrice * item.quantity;
                   return (
                     <div key={item.id} className="flex gap-4">
-                      <div className="w-20 h-20 shrink-0 bg-[#f0f3f4] dark:bg-[#15232b] rounded-lg overflow-hidden relative">
+                  <div className="w-20 h-20 shrink-0 bg-[#f0f3f4] dark:bg-[#15232b] rounded-lg overflow-hidden relative">
                         <img
                           alt={item.name}
                           className="w-full h-full object-cover"
                           src={item.image}
                         />
-                      </div>
-                      <div className="flex-1">
+                  </div>
+                  <div className="flex-1">
                         <h4 className="text-sm font-bold text-[#111618] dark:text-white leading-tight">
                           {item.name}
                         </h4>
@@ -509,8 +514,8 @@ const CheckoutPage: React.FC = () => {
                         <p className="text-sm font-medium text-[#111618] dark:text-white mt-2">
                           ${itemTotal.toFixed(2)}
                         </p>
-                      </div>
-                    </div>
+                  </div>
+                </div>
                   );
                 })}
               </div>
@@ -544,12 +549,22 @@ const CheckoutPage: React.FC = () => {
                 {/* Pay Button */}
                 <button
                   type="submit"
-                  className="w-full mt-4 bg-primary hover:bg-primary/90 text-white font-bold py-3.5 px-6 rounded-lg shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2 group"
+                  disabled={isClearingCart}
+                  className="w-full mt-4 bg-primary hover:bg-primary/90 text-white font-bold py-3.5 px-6 rounded-lg shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="material-symbols-outlined group-hover:scale-110 transition-transform">
-                    lock
-                  </span>
-                  Pay ${total.toFixed(2)}
+                  {isClearingCart ? (
+                    <>
+                      <LoadingSpinner size="sm" className="border-white border-t-transparent" />
+                      <span>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined group-hover:scale-110 transition-transform">
+                        lock
+                      </span>
+                      Pay ${total.toFixed(2)}
+                    </>
+                  )}
                 </button>
               </div>
             </div>

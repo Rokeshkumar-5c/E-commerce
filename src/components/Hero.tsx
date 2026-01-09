@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+// Use styled-components for static background image (could also use className with Tailwind)
 const HeroImage = styled.div`
   width: 100%;
   height: 100%;
@@ -7,7 +8,7 @@ const HeroImage = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: transform 0.7s;
+  transition: transform 0.7s ease;
   
   .group:hover & {
     transform: scale(1.05);

@@ -1,19 +1,41 @@
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
-import type { Product } from '../components/ProductCard';
+import type { Product } from '../shared/types';
 import CategoryBanner from '../components/CategoryBanner';
 import FiltersSidebar from '../components/FiltersSidebar';
 import Pagination from '../components/Pagination';
-import { selectAllProducts } from '../store/productsSlice';
+import { selectAllProducts, selectIsFetchingProducts, fetchProducts } from '../store/productsSlice';
+import { LoadingSpinner } from '../shared/components/Loading';
+import { useAppDispatch } from '../shared/hooks/useAppDispatch';
 
 const ProductListingPage = () => {
     const { categoryName } = useParams<{ categoryName: string }>();
+    const dispatch = useAppDispatch();
     const allProducts = useSelector(selectAllProducts);
+    const isFetchingProducts = useSelector(selectIsFetchingProducts);
+
+    // Convert URL category name back to display format
+    const categoryDisplayName = categoryName?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+    useEffect(() => {
+        if (categoryDisplayName) {
+            dispatch(fetchProducts(categoryDisplayName));
+        }
+    }, [categoryDisplayName, dispatch]);
 
     const products = allProducts.filter(product =>
         product.category?.toLowerCase().replace(/\s+/g, '-') === categoryName
     );
+
+    if (isFetchingProducts) {
+        return (
+            <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1 flex items-center justify-center min-h-[60vh]">
+                <LoadingSpinner size="lg" />
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1">

@@ -6,7 +6,7 @@ const OccasionImage = styled.div<{ $imageUrl: string }>`
   background-image: url("${props => props.$imageUrl}");
   background-size: cover;
   background-position: center;
-  transition: transform 0.7s;
+  transition: transform 0.7s ease;
   
   .group:hover & {
     transform: scale(1.1);

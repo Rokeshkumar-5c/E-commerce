@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../store/cartSlice";
-import type { Product } from "./ProductCard";
+import { useSelector } from "react-redux";
+import { addToCartAsync, selectIsAddingToCart } from "../store/cartSlice";
+import type { Product } from "../shared/types";
+import { LoadingSpinner } from "../shared/components/Loading";
+import { useAppDispatch } from "../shared/hooks/useAppDispatch";
 
 interface ProductInfoProps {
   product: Product;
@@ -14,13 +16,12 @@ const FinishSwatch = styled.button<{ $isSelected: boolean; $color: string }>`
   border-radius: 9999px;
   border: 2px solid;
   background-color: ${props => props.$color};
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   border-color: ${props => 
     props.$isSelected 
       ? 'var(--color-primary)' 
       : 'rgb(209 213 219)'};
-  
-  ${props => props.$isSelected && 'transform: scale(1.1);'}
+  transform: ${props => props.$isSelected ? 'scale(1.1)' : 'scale(1)'};
   
   &:hover {
     border-color: ${props => 
@@ -45,7 +46,8 @@ const FinishSwatch = styled.button<{ $isSelected: boolean; $color: string }>`
 `;
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const isAddingToCart = useSelector(selectIsAddingToCart);
   const [quantity, setQuantity] = useState(1);
   const [selectedFinish, setSelectedFinish] = useState(0);
   const [expandedSection, setExpandedSection] = useState<string | null>(
@@ -53,7 +55,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   );
 
   const handleAddToCart = () => {
-    dispatch(addToCart(product));
+    dispatch(addToCartAsync({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    }));
   };
 
   const handleQuantityChange = (delta: number) => {
@@ -208,10 +215,20 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       <div className="flex flex-col gap-3">
         <button
           onClick={handleAddToCart}
-          className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2"
+          disabled={isAddingToCart}
+          className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className="material-symbols-outlined">shopping_bag</span>
-          Add to Cart - {product.price}
+          {isAddingToCart ? (
+            <>
+              <LoadingSpinner size="sm" className="border-white border-t-transparent" />
+              <span>Adding...</span>
+            </>
+          ) : (
+            <>
+              <span className="material-symbols-outlined">shopping_bag</span>
+              Add to Cart - {product.price}
+            </>
+          )}
         </button>
         <div className="flex gap-3">
           <button className="flex-1 h-12 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold rounded-lg transition-all flex items-center justify-center gap-2">
